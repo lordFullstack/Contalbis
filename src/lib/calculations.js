@@ -120,4 +120,13 @@ export function formatCurrency(value) {
   }).format(value || 0)
 }
 
+// Versión corta para etiquetas de gráfico: 1.2M, 850k, etc.
+export function formatCompact(value) {
+  return new Intl.NumberFormat('es-CO', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  }).format(value || 0)
+}
+
 export { todayStr }
+  
