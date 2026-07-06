@@ -29,6 +29,11 @@ export function getCashBalance(transactions) {
   return ventas - gastos
 }
 
+// Suma acumulada de ingresos (ventas) sin restar gastos
+export function getTotalIngresos(transactions) {
+  return sum(transactions.filter(t => t.type === 'venta'))
+}
+
 export function getTodayMovements(transactions, suppliers) {
   const today = getTodayTransactions(transactions)
   const supplierMap = new Map(suppliers.map(s => [s.id, s.name]))
@@ -129,4 +134,3 @@ export function formatCompact(value) {
 }
 
 export { todayStr }
-  
