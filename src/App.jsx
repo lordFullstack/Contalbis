@@ -42,7 +42,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
       <main className="max-w-2xl mx-auto pb-24 px-4 pt-6 sm:px-6 lg:max-w-4xl">
         {tab === 'dashboard' && (
-          <Dashboard transactions={transactions} suppliers={suppliers} onChange={refresh} />
+          <Dashboard transactions={transactions} suppliers={suppliers} settings={settings} onChange={refresh} />
         )}
         {tab === 'suppliers' && (
           <Suppliers transactions={transactions} suppliers={suppliers} onChange={refresh} />
@@ -55,4 +55,4 @@ export default function App() {
       <BottomNav active={tab} onChange={setTab} />
     </div>
   )
-}
+      }
