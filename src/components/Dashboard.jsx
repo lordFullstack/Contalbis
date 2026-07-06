@@ -8,6 +8,7 @@ import {
   getTodayMovements,
   getChartData,
   formatCurrency,
+  formatCompact,
   todayStr
 } from '../lib/calculations.js'
 
@@ -34,7 +35,7 @@ function SummaryCard({ icon: Icon, label, value, tone }) {
   )
 }
 
-export default function Dashboard({ transactions, suppliers, onChange }) {
+export default function Dashboard({ transactions, suppliers, settings, onChange }) {
   const [period, setPeriod] = useState('day')
   const [showForm, setShowForm] = useState(false)
 
@@ -46,9 +47,18 @@ export default function Dashboard({ transactions, suppliers, onChange }) {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-xl font-semibold">Resumen de hoy</h1>
-        <p className="text-sm text-gray-500 dark:text-slate-400">{new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+      <header className="flex items-center gap-3">
+        {settings?.logo && (
+          <img
+            src={settings.logo}
+            alt="Logo del negocio"
+            className="w-11 h-11 rounded-xl object-cover border border-gray-100 dark:border-slate-800"
+          />
+        )}
+        <div>
+          <h1 className="text-xl font-semibold">{settings?.businessName || 'Resumen de hoy'}</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 capitalize">{new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+        </div>
       </header>
 
       <div className="grid grid-cols-2 gap-3">
@@ -73,10 +83,10 @@ export default function Dashboard({ transactions, suppliers, onChange }) {
         </div>
         <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+            <LineChart data={chartData} margin={{ top: 4, right: 8, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
               <XAxis dataKey="label" fontSize={10} tickLine={false} axisLine={false} />
-              <YAxis fontSize={10} tickLine={false} axisLine={false} />
+              <YAxis fontSize={10} tickLine={false} axisLine={false} width={44} tickFormatter={formatCompact} />
               <Tooltip formatter={(v) => formatCurrency(v)} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               <Line type="monotone" dataKey="ventas" name="Ventas" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
@@ -238,5 +248,5 @@ function QuickTransactionForm({ suppliers, onClose, onSaved }) {
       </form>
     </div>
   )
-}
-  
+        }
+          
