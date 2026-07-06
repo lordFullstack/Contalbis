@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
-import { Wallet, TrendingUp, TrendingDown, Plus, X } from 'lucide-react'
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts'
+import { Wallet, TrendingUp, TrendingDown, Banknote, Plus, X } from 'lucide-react'
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts'
 import { addTransaction } from '../lib/storage.js'
 import {
   getTodayTotals,
@@ -39,6 +39,7 @@ export default function Dashboard({ transactions, suppliers, onChange }) {
   const [showForm, setShowForm] = useState(false)
 
   const { ventas, gastos } = getTodayTotals(transactions)
+  const totalVenta = ventas + gastos
   const efectivo = getCashBalance(transactions)
   const movimientos = useMemo(() => getTodayMovements(transactions, suppliers), [transactions, suppliers])
   const chartData = useMemo(() => getChartData(transactions, period), [transactions, period])
@@ -50,9 +51,10 @@ export default function Dashboard({ transactions, suppliers, onChange }) {
         <p className="text-sm text-gray-500 dark:text-slate-400">{new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
       </header>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <SummaryCard icon={TrendingUp} label="Ventas" value={ventas} tone="up" />
         <SummaryCard icon={TrendingDown} label="Gastos" value={gastos} tone="down" />
+        <SummaryCard icon={Banknote} label="Total venta" value={totalVenta} tone="neutral" />
         <SummaryCard icon={Wallet} label="Efectivo" value={efectivo} tone="neutral" />
       </div>
 
@@ -71,15 +73,15 @@ export default function Dashboard({ transactions, suppliers, onChange }) {
         </div>
         <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+            <LineChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
               <XAxis dataKey="label" fontSize={10} tickLine={false} axisLine={false} />
               <YAxis fontSize={10} tickLine={false} axisLine={false} />
               <Tooltip formatter={(v) => formatCurrency(v)} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="ventas" name="Ventas" fill="#10b981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="gastos" name="Gastos" fill="#f43f5e" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Line type="monotone" dataKey="ventas" name="Ventas" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="gastos" name="Gastos" stroke="#f43f5e" strokeWidth={2} dot={{ r: 3 }} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </section>
@@ -237,3 +239,4 @@ function QuickTransactionForm({ suppliers, onClose, onSaved }) {
     </div>
   )
 }
+  
