@@ -4,7 +4,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 import { addTransaction } from '../lib/storage.js'
 import {
   getTodayTotals,
-  getCashBalance,
+  getTotalIngresos,
   getTodayMovements,
   getChartData,
   formatCurrency,
@@ -41,7 +41,7 @@ export default function Dashboard({ transactions, suppliers, settings, onChange 
 
   const { ventas, gastos } = getTodayTotals(transactions)
   const totalVenta = ventas + gastos
-  const efectivo = getCashBalance(transactions)
+  const efectivo = getTotalIngresos(transactions)
   const movimientos = useMemo(() => getTodayMovements(transactions, suppliers), [transactions, suppliers])
   const chartData = useMemo(() => getChartData(transactions, period), [transactions, period])
 
@@ -248,5 +248,4 @@ function QuickTransactionForm({ suppliers, onClose, onSaved }) {
       </form>
     </div>
   )
-        }
-          
+}
