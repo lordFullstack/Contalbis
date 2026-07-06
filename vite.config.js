@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: {
         name: 'Control Financiero',
-        short_name: 'ControlFin',
+        short_name: 'Contalbis',
         description: 'Sistema contable de un solo usuario',
         theme_color: '#0f172a',
         background_color: '#0f172a',
