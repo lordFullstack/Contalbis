@@ -1,12 +1,26 @@
 import React, { useRef, useState } from 'react'
-import { Download, Upload, Moon, Sun } from 'lucide-react'
-import { exportBackup, importBackup } from '../lib/storage.js'
+import { Download, Upload, Moon, Sun, Image as ImageIcon, Trash2 } from 'lucide-react'
+import { exportBackup, importBackup, fileToBase64 } from '../lib/storage.js'
 
 const COLORES = ['#2563eb', '#059669', '#dc2626', '#d97706', '#7c3aed', '#0891b2']
 
 export default function Settings({ settings, onUpdateSettings, onChange }) {
   const fileInputRef = useRef(null)
+  const logoInputRef = useRef(null)
   const [importMsg, setImportMsg] = useState(null)
+
+  async function handleLogoChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      const base64 = await fileToBase64(file)
+      onUpdateSettings({ logo: base64 })
+    } catch (err) {
+      alert('No se pudo procesar la imagen del logo.')
+    } finally {
+      e.target.value = ''
+    }
+  }
 
   async function handleImport(e) {
     const file = e.target.files?.[0]
@@ -39,6 +53,44 @@ export default function Settings({ settings, onUpdateSettings, onChange }) {
             onChange={e => onUpdateSettings({ businessName: e.target.value })}
             className="w-full mt-1 rounded-lg border border-gray-200 dark:border-slate-700 bg-transparent px-3 py-2 text-sm"
           />
+        </div>
+
+        <div>
+          <label className="text-xs text-gray-400 block mb-2">Logotipo</label>
+          <div className="flex items-center gap-3">
+            {settings.logo ? (
+              <img src={settings.logo} alt="Logo" className="w-14 h-14 rounded-xl object-cover border border-gray-100 dark:border-slate-800" />
+            ) : (
+              <div className="w-14 h-14 rounded-xl border border-dashed border-gray-300 dark:border-slate-700 flex items-center justify-center text-gray-300">
+                <ImageIcon size={20} />
+              </div>
+            )}
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => logoInputRef.current?.click()}
+                className="text-xs font-medium rounded-full px-3 py-1.5 border border-gray-200 dark:border-slate-700"
+              >
+                {settings.logo ? 'Cambiar logo' : 'Subir logo'}
+              </button>
+              {settings.logo && (
+                <button
+                  type="button"
+                  onClick={() => onUpdateSettings({ logo: null })}
+                  className="text-xs font-medium text-rose-600 flex items-center gap-1"
+                >
+                  <Trash2 size={12} /> Quitar
+                </button>
+              )}
+            </div>
+            <input
+              ref={logoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleLogoChange}
+            />
+          </div>
         </div>
 
         <div>
@@ -114,4 +166,5 @@ export default function Settings({ settings, onUpdateSettings, onChange }) {
       </section>
     </div>
   )
-}
+                                             }
+                         
